@@ -1,3 +1,5 @@
+from re import search
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -12,6 +14,12 @@ def student_list(request):
 
     if request.method == 'GET':
         students = Student.objects.all()
+
+        search = request.GET.get('search')
+
+        if search:
+            students = students.filter(name__icontains=search)
+
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 
